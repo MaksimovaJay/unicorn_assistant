@@ -56,7 +56,6 @@
   --color-sidebar-ring: #F996A5;
 
   /* Border Radius */
-  --radius-sm: 12px;
   --radius: 12px;
   --radius-md: 20px;
   --radius-lg: 32px;
@@ -78,5 +77,14 @@
   }
   body {
     @apply bg-background text-foreground antialiased;
+  }
+  .dark {
+    --color-background: #1a0f0f;
+    --color-foreground: #FEF3F3;
+    --color-card: #221515;
+    --color-card-foreground: #FEF3F3;
+    --color-border: #3d2525;
+    --color-muted: #2a1818;
+    --color-muted-foreground: #c4a0a0;
   }
 }
