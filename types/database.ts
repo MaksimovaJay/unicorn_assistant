@@ -183,71 +183,86 @@ export interface ActivityLog {
 
 export interface Database {
   public: {
+    Views: Record<never, never>;
+    Functions: Record<never, never>;
     Tables: {
       workspaces: {
-        Row: Workspace;
-        Insert: Omit<Workspace, "id" | "created_at">;
-        Update: Partial<Omit<Workspace, "id" | "created_at">>;
+        Row: Workspace & { [key: string]: unknown };
+        Insert: Omit<Workspace, "id" | "created_at"> & { [key: string]: unknown };
+        Update: Partial<Omit<Workspace, "id" | "created_at">> & { [key: string]: unknown };
+        Relationships: [];
       };
       profiles: {
-        Row: Profile;
-        Insert: Omit<Profile, "created_at">;
-        Update: Partial<Omit<Profile, "id" | "created_at">>;
+        Row: Profile & { [key: string]: unknown };
+        Insert: Omit<Profile, "created_at"> & { [key: string]: unknown };
+        Update: Partial<Omit<Profile, "id" | "created_at">> & { [key: string]: unknown };
+        Relationships: [];
       };
       events: {
-        Row: Event;
-        Insert: Omit<Event, "id" | "created_at" | "updated_at">;
-        Update: Partial<Omit<Event, "id" | "created_at">>;
+        Row: Event & { [key: string]: unknown };
+        Insert: Omit<Event, "id" | "created_at" | "updated_at"> & { [key: string]: unknown };
+        Update: Partial<Omit<Event, "id" | "created_at">> & { [key: string]: unknown };
+        Relationships: [];
       };
       tasks: {
-        Row: Task;
-        Insert: Omit<Task, "id" | "created_at" | "updated_at">;
-        Update: Partial<Omit<Task, "id" | "created_at">>;
+        Row: Task & { [key: string]: unknown };
+        Insert: Omit<Task, "id" | "created_at" | "updated_at"> & { [key: string]: unknown };
+        Update: Partial<Omit<Task, "id" | "created_at">> & { [key: string]: unknown };
+        Relationships: [];
       };
       contacts: {
-        Row: Contact;
-        Insert: Omit<Contact, "id" | "created_at" | "updated_at">;
-        Update: Partial<Omit<Contact, "id" | "created_at">>;
+        Row: Contact & { [key: string]: unknown };
+        Insert: Omit<Contact, "id" | "created_at" | "updated_at"> & { [key: string]: unknown };
+        Update: Partial<Omit<Contact, "id" | "created_at">> & { [key: string]: unknown };
+        Relationships: [];
       };
       booking_sessions: {
-        Row: BookingSession;
-        Insert: Omit<BookingSession, "id" | "created_at">;
-        Update: Partial<Omit<BookingSession, "id" | "created_at">>;
+        Row: BookingSession & { [key: string]: unknown };
+        Insert: Omit<BookingSession, "id" | "created_at"> & { [key: string]: unknown };
+        Update: Partial<Omit<BookingSession, "id" | "created_at">> & { [key: string]: unknown };
+        Relationships: [];
       };
       booking_slots: {
-        Row: BookingSlot;
-        Insert: Omit<BookingSlot, "id" | "created_at" | "updated_at">;
-        Update: Partial<Omit<BookingSlot, "id" | "created_at">>;
+        Row: BookingSlot & { [key: string]: unknown };
+        Insert: Omit<BookingSlot, "id" | "created_at" | "updated_at"> & { [key: string]: unknown };
+        Update: Partial<Omit<BookingSlot, "id" | "created_at">> & { [key: string]: unknown };
+        Relationships: [];
       };
       payments: {
-        Row: Payment;
-        Insert: Omit<Payment, "id" | "created_at" | "updated_at">;
-        Update: Partial<Omit<Payment, "id" | "created_at">>;
+        Row: Payment & { [key: string]: unknown };
+        Insert: Omit<Payment, "id" | "created_at" | "updated_at"> & { [key: string]: unknown };
+        Update: Partial<Omit<Payment, "id" | "created_at">> & { [key: string]: unknown };
+        Relationships: [];
       };
       payment_history: {
-        Row: PaymentHistoryEntry;
-        Insert: Omit<PaymentHistoryEntry, "id" | "created_at">;
-        Update: Partial<Omit<PaymentHistoryEntry, "id" | "created_at">>;
+        Row: PaymentHistoryEntry & { [key: string]: unknown };
+        Insert: Omit<PaymentHistoryEntry, "id" | "created_at"> & { [key: string]: unknown };
+        Update: Partial<Omit<PaymentHistoryEntry, "id" | "created_at">> & { [key: string]: unknown };
+        Relationships: [];
       };
       notes: {
-        Row: Note;
-        Insert: Omit<Note, "id" | "created_at" | "updated_at">;
-        Update: Partial<Omit<Note, "id" | "created_at">>;
+        Row: Note & { [key: string]: unknown };
+        Insert: Omit<Note, "id" | "created_at" | "updated_at"> & { [key: string]: unknown };
+        Update: Partial<Omit<Note, "id" | "created_at">> & { [key: string]: unknown };
+        Relationships: [];
       };
       files: {
-        Row: AppFile;
-        Insert: Omit<AppFile, "id" | "created_at">;
-        Update: Partial<Omit<AppFile, "id" | "created_at">>;
+        Row: AppFile & { [key: string]: unknown };
+        Insert: Omit<AppFile, "id" | "created_at"> & { [key: string]: unknown };
+        Update: Partial<Omit<AppFile, "id" | "created_at">> & { [key: string]: unknown };
+        Relationships: [];
       };
       notifications: {
-        Row: Notification;
-        Insert: Omit<Notification, "id" | "created_at">;
-        Update: Partial<Omit<Notification, "id" | "created_at">>;
+        Row: Notification & { [key: string]: unknown };
+        Insert: Omit<Notification, "id" | "created_at"> & { [key: string]: unknown };
+        Update: Partial<Omit<Notification, "id" | "created_at">> & { [key: string]: unknown };
+        Relationships: [];
       };
       activity_logs: {
-        Row: ActivityLog;
-        Insert: Omit<ActivityLog, "id" | "created_at">;
-        Update: never;
+        Row: ActivityLog & { [key: string]: unknown };
+        Insert: Omit<ActivityLog, "id" | "created_at"> & { [key: string]: unknown };
+        Update: { [key: string]: unknown };
+        Relationships: [];
       };
     };
   };

@@ -36,7 +36,7 @@ export default function SignupPage() {
     });
 
     if (signupError) {
-      setError(signupError.message);
+      setError("Не удалось зарегистрироваться. Проверьте данные и попробуйте снова.");
       setLoading(false);
       return;
     }
@@ -45,16 +45,16 @@ export default function SignupPage() {
       const res = await fetch("/api/setup-workspace", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ fullName: name }),
+        body: JSON.stringify({ fullName: name, workspaceName: "Unicorn Assistant" }),
       });
 
       if (!res.ok) {
-        setError("Не удалось создать рабочее пространство. Попробуйте снова.");
-        setLoading(false);
-        return;
+        console.error("Workspace setup failed, will retry on dashboard load");
+        // Don't block — auth user exists, workspace will be set up on next load
       }
     }
 
+    setLoading(false);
     router.push("/dashboard");
     router.refresh();
   }
@@ -116,7 +116,7 @@ export default function SignupPage() {
           </div>
 
           {error && (
-            <p className="text-destructive text-sm font-semibold">{error}</p>
+            <p role="alert" className="text-destructive text-sm font-semibold">{error}</p>
           )}
 
           <Button

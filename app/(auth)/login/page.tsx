@@ -39,6 +39,7 @@ export default function LoginPage() {
       return;
     }
 
+    setLoading(false);
     router.push("/dashboard");
     router.refresh();
   }
@@ -85,7 +86,7 @@ export default function LoginPage() {
           </div>
 
           {error && (
-            <p className="text-destructive text-sm font-semibold">{error}</p>
+            <p role="alert" className="text-destructive text-sm font-semibold">{error}</p>
           )}
 
           <Button
