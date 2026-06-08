@@ -33,7 +33,7 @@ export function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="w-[280px] min-h-screen bg-surface border-r border-border flex flex-col flex-shrink-0">
+    <aside className="w-[280px] h-full bg-surface border-r border-border flex flex-col flex-shrink-0">
       <div className="h-[72px] flex items-center px-6 border-b border-border">
         <span className="text-xl font-black text-text-primary">🦄 Unicorn</span>
       </div>

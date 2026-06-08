@@ -1,19 +1,15 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { Bell, Search, LogOut } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
 export function Topbar() {
-  const router = useRouter();
-
   async function handleSignOut() {
     const supabase = createClient();
     await supabase.auth.signOut();
-    router.push("/login");
-    router.refresh();
+    window.location.href = "/login";
   }
 
   return (
@@ -34,6 +30,7 @@ export function Topbar() {
         <Button
           variant="ghost"
           size="icon"
+          aria-label="Уведомления"
           className="h-10 w-10 rounded-full hover:bg-background"
         >
           <Bell size={20} className="text-text-secondary" />
@@ -43,8 +40,8 @@ export function Topbar() {
           variant="ghost"
           size="icon"
           onClick={handleSignOut}
+          aria-label="Выйти"
           className="h-10 w-10 rounded-full hover:bg-background"
-          title="Выйти"
         >
           <LogOut size={18} className="text-text-secondary" />
         </Button>

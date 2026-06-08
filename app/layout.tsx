@@ -22,7 +22,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ru" className={nunito.variable}>
-      <body className="font-sans antialiased">
+      <body className="font-sans">
         <QueryProvider>{children}</QueryProvider>
       </body>
     </html>
