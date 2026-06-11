@@ -36,6 +36,7 @@ export default async function WorkspaceLayout({
         workspace_id: ws.id,
         full_name: (user.user_metadata?.full_name as string | undefined) ?? "User",
         role: "owner",
+        avatar_url: null,
       });
     }
   }

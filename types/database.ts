@@ -185,7 +185,12 @@ export interface ActivityLog {
 export interface Database {
   public: {
     Views: Record<never, never>;
-    Functions: Record<never, never>;
+    Functions: {
+      get_profile_for_user: {
+        Args: { p_user_id: string };
+        Returns: Array<{ id: string; workspace_id: string; full_name: string; role: string }>;
+      };
+    };
     Tables: {
       workspaces: {
         Row: Workspace & { [key: string]: unknown };
@@ -263,6 +268,12 @@ export interface Database {
         Row: ActivityLog & { [key: string]: unknown };
         Insert: Omit<ActivityLog, "id" | "created_at"> & { [key: string]: unknown };
         Update: { [key: string]: unknown };
+        Relationships: [];
+      };
+      links: {
+        Row: { id: string; workspace_id: string; title: string; url: string; created_by: string | null; created_at: string };
+        Insert: { workspace_id: string; title: string; url: string; created_by?: string | null };
+        Update: { title?: string; url?: string };
         Relationships: [];
       };
     };
