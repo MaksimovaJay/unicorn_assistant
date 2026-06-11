@@ -49,6 +49,7 @@ export interface Event {
   meeting_link: string | null;
   notes: string | null;
   contact_id: string | null;
+  telegram: string | null;
   created_by: string;
   created_at: string;
   updated_at: string;

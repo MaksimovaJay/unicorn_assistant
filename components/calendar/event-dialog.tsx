@@ -27,6 +27,7 @@ const schema = z.object({
   all_day: z.boolean().default(false),
   description: z.string().optional(),
   location: z.string().optional(),
+  telegram: z.string().optional(),
   notes: z.string().optional(),
 });
 
@@ -85,6 +86,7 @@ export function EventDialog({ open, onClose, defaultStart, editEvent, allEvents 
         all_day: editEvent.all_day,
         description: editEvent.description ?? "",
         location: editEvent.location ?? "",
+        telegram: editEvent.telegram ?? "",
         notes: editEvent.notes ?? "",
       });
     } else {
@@ -106,6 +108,8 @@ export function EventDialog({ open, onClose, defaultStart, editEvent, allEvents 
   const watchStart = watch("start_at");
   const watchEnd = watch("end_at");
   const watchAllDay = watch("all_day");
+  const watchEventType = watch("event_type");
+  const watchStatus = watch("status");
 
   const conflicts = !watchAllDay && watchStart && watchEnd
     ? detectConflicts(allEvents, toISOLocal(watchStart), toISOLocal(watchEnd), editEvent?.id)
@@ -118,6 +122,7 @@ export function EventDialog({ open, onClose, defaultStart, editEvent, allEvents 
       end_at: toISOLocal(values.end_at),
       description: values.description || null,
       location: values.location || null,
+      telegram: values.telegram || null,
       notes: values.notes || null,
     };
 
@@ -155,7 +160,7 @@ export function EventDialog({ open, onClose, defaultStart, editEvent, allEvents 
             <div className="space-y-1">
               <Label className="text-sm font-semibold">Тип</Label>
               <Select
-                defaultValue={editEvent?.event_type ?? "meeting"}
+                value={watchEventType}
                 onValueChange={(v) => setValue("event_type", v as EventType)}
               >
                 <SelectTrigger className="h-11 rounded-[12px]">
@@ -172,7 +177,7 @@ export function EventDialog({ open, onClose, defaultStart, editEvent, allEvents 
             <div className="space-y-1">
               <Label className="text-sm font-semibold">Статус</Label>
               <Select
-                defaultValue={editEvent?.status ?? "planned"}
+                value={watchStatus}
                 onValueChange={(v) => setValue("status", v as EventStatus)}
               >
                 <SelectTrigger className="h-11 rounded-[12px]">
@@ -216,6 +221,11 @@ export function EventDialog({ open, onClose, defaultStart, editEvent, allEvents 
           <div className="space-y-1">
             <Label className="text-sm font-semibold">Место</Label>
             <Input {...register("location")} className="h-11 rounded-[12px]" placeholder="Адрес или ссылка" />
+          </div>
+
+          <div className="space-y-1">
+            <Label className="text-sm font-semibold">Telegram пользователя</Label>
+            <Input {...register("telegram")} className="h-11 rounded-[12px]" placeholder="@username" />
           </div>
 
           <div className="space-y-1">

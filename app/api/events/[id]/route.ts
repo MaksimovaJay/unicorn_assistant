@@ -14,7 +14,7 @@ export async function PUT(
   const body = await request.json();
 
   const updatePayload: Record<string, unknown> = {};
-  const allowed = ["title", "event_type", "status", "start_at", "end_at", "all_day", "description", "location", "notes", "contact_id"] as const;
+  const allowed = ["title", "event_type", "status", "start_at", "end_at", "all_day", "description", "location", "notes", "contact_id", "telegram"] as const;
   for (const key of allowed) {
     if (key in body) updatePayload[key] = body[key];
   }

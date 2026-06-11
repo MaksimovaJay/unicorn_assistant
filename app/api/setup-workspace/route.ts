@@ -1,14 +1,19 @@
 import { createClient } from "@/lib/supabase/server";
 import { NextResponse } from "next/server";
 
+export async function GET() {
+  return setupWorkspace("User", "Unicorn Assistant");
+}
+
 export async function POST(request: Request) {
-  const supabase = await createClient();
   const { fullName, workspaceName } = await request.json();
+  return setupWorkspace(fullName, workspaceName);
+}
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+async function setupWorkspace(fullName: string, workspaceName: string) {
+  const supabase = await createClient();
 
+  const { data: { user } } = await supabase.auth.getUser();
   if (!user) {
     return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
   }
@@ -18,7 +23,6 @@ export async function POST(request: Request) {
     user.email?.split("@")[0] ||
     "User";
 
-  // Idempotent: skip if profile already exists
   const { data: existingProfile } = await supabase
     .from("profiles")
     .select("id")
@@ -29,10 +33,14 @@ export async function POST(request: Request) {
     return NextResponse.json({ success: true });
   }
 
-  // Create workspace
   const { data: workspaceData, error: wsError } = await supabase
     .from("workspaces")
-    .insert({ name: workspaceName || "Unicorn Assistant", timezone: "UTC", currency: "USD" })
+    .insert({
+      name: workspaceName || "Unicorn Assistant",
+      timezone: "UTC",
+      currency: "USD",
+      owner_id: user.id,
+    })
     .select()
     .single();
 
@@ -40,7 +48,6 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: wsError?.message }, { status: 500 });
   }
 
-  // Create profile
   const { error: profileError } = await supabase.from("profiles").insert({
     id: user.id,
     workspace_id: workspaceData.id,

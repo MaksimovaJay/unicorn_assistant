@@ -11,7 +11,7 @@ import {
   CreditCard,
   FileText,
   FolderOpen,
-  Activity,
+  Link2,
   Settings,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -25,7 +25,7 @@ const navItems = [
   { href: "/payments", label: "Платежи", icon: CreditCard },
   { href: "/notes", label: "Заметки", icon: FileText },
   { href: "/files", label: "Файлы", icon: FolderOpen },
-  { href: "/activity", label: "Активность", icon: Activity },
+  { href: "/links", label: "Ссылки", icon: Link2 },
   { href: "/settings", label: "Настройки", icon: Settings },
 ];
 
@@ -33,7 +33,7 @@ export function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="w-[280px] h-full bg-surface border-r border-border flex flex-col flex-shrink-0">
+    <aside className="hidden md:flex w-[280px] h-full bg-surface border-r border-border flex-col flex-shrink-0">
       <div className="h-[72px] flex items-center px-6 border-b border-border">
         <span className="text-xl font-black text-text-primary">🦄 Unicorn</span>
       </div>

@@ -1,7 +1,7 @@
 "use client";
 
 import { Popover as PopoverPrimitive } from "@base-ui/react/popover";
-import { MapPin, Clock, Edit2, Trash2 } from "lucide-react";
+import { MapPin, Clock, Edit2, Trash2, Send } from "lucide-react";
 import { useDeleteEvent } from "@/hooks/use-events";
 import {
   EVENT_COLORS, EVENT_TYPE_LABELS, EVENT_STATUS_LABELS,
@@ -21,6 +21,7 @@ interface EventPopoverProps {
 
 export function EventPopover({ event, anchorEl, onClose, onEdit }: EventPopoverProps) {
   const deleteEvent = useDeleteEvent();
+  const telegram = event?.telegram?.replace("@", "") ?? null;
 
   if (!event || !anchorEl) return null;
 
@@ -61,6 +62,17 @@ export function EventPopover({ event, anchorEl, onClose, onEdit }: EventPopoverP
               <div className="flex items-start justify-between gap-2">
                 <h3 className="font-extrabold text-base leading-tight">{event.title}</h3>
                 <div className="flex gap-1 flex-shrink-0">
+                  {telegram && (
+                    <a
+                      href={`https://t.me/${telegram}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      title="Написать в Telegram"
+                      className="p-1 rounded-full hover:bg-black/10 transition-colors"
+                    >
+                      <Send size={14} />
+                    </a>
+                  )}
                   <button
                     onClick={() => { onEdit(event); onClose(); }}
                     className="p-1 rounded-full hover:bg-black/10 transition-colors"

@@ -8,7 +8,6 @@ async function getProfile(supabase: Awaited<ReturnType<typeof createClient>>, us
 
 export async function GET() {
   const supabase = await createClient();
-
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
@@ -16,10 +15,10 @@ export async function GET() {
   if (!profile) return NextResponse.json({ error: "Profile not found" }, { status: 404 });
 
   const { data, error } = await supabase
-    .from("events")
+    .from("links")
     .select("*")
     .eq("workspace_id", profile.workspace_id)
-    .order("start_at", { ascending: true });
+    .order("created_at", { ascending: false });
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
   return NextResponse.json(data);
@@ -27,7 +26,6 @@ export async function GET() {
 
 export async function POST(request: Request) {
   const supabase = await createClient();
-
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
@@ -37,22 +35,12 @@ export async function POST(request: Request) {
   const body = await request.json();
 
   const { data, error } = await supabase
-    .from("events")
+    .from("links")
     .insert({
       workspace_id: profile.workspace_id,
       created_by: user.id,
       title: body.title,
-      event_type: body.event_type ?? "meeting",
-      status: body.status ?? "planned",
-      start_at: body.start_at,
-      end_at: body.end_at,
-      all_day: body.all_day ?? false,
-      description: body.description ?? null,
-      location: body.location ?? null,
-      meeting_link: body.meeting_link ?? null,
-      notes: body.notes ?? null,
-      contact_id: body.contact_id ?? null,
-      telegram: body.telegram ?? null,
+      url: body.url,
     })
     .select()
     .single();

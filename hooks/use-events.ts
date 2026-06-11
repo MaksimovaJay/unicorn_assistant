@@ -10,7 +10,12 @@ async function fetchEvents(): Promise<Event[]> {
 }
 
 export function useEvents() {
-  return useQuery({ queryKey: EVENTS_KEY, queryFn: fetchEvents });
+  return useQuery({
+    queryKey: EVENTS_KEY,
+    queryFn: fetchEvents,
+    staleTime: 60_000,
+    refetchOnWindowFocus: false,
+  });
 }
 
 export function useCreateEvent() {

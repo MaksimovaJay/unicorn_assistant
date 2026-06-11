@@ -13,7 +13,7 @@ const ALL_TYPES = Object.keys(EVENT_TYPE_LABELS) as EventType[];
 
 export function CalendarFilters({ activeTypes, onToggleType }: CalendarFiltersProps) {
   return (
-    <div className="flex flex-wrap gap-2 px-1">
+    <div className="flex gap-2 px-1 overflow-x-auto pb-1 md:flex-wrap md:justify-center scrollbar-none">
       {ALL_TYPES.map((type) => {
         const isActive = activeTypes.includes(type);
         const colors = EVENT_COLORS[type];
@@ -22,7 +22,7 @@ export function CalendarFilters({ activeTypes, onToggleType }: CalendarFiltersPr
             key={type}
             onClick={() => onToggleType(type)}
             className={cn(
-              "inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold transition-all duration-150 border",
+              "inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold transition-all duration-150 border flex-shrink-0",
               isActive
                 ? "opacity-100 border-transparent"
                 : "opacity-40 bg-transparent border-border"
@@ -31,7 +31,7 @@ export function CalendarFilters({ activeTypes, onToggleType }: CalendarFiltersPr
           >
             <span
               className="w-2 h-2 rounded-full flex-shrink-0"
-              style={{ backgroundColor: colors.bg }}
+              style={{ backgroundColor: isActive ? colors.text : colors.bg }}
             />
             {EVENT_TYPE_LABELS[type]}
           </button>
