@@ -14,7 +14,7 @@ import { useCreateLink } from "@/hooks/use-links";
 
 const schema = z.object({
   title: z.string().min(1, "Введи название"),
-  url: z.string().url("Введи корректную ссылку"),
+  url: z.string().min(1, "Введи ссылку"),
 });
 
 type FormValues = z.infer<typeof schema>;
@@ -32,7 +32,8 @@ export function LinkDialog({ open, onClose }: LinkDialogProps) {
   });
 
   async function onSubmit(values: FormValues) {
-    await createLink.mutateAsync(values);
+    const url = values.url.match(/^https?:\/\//) ? values.url : `https://${values.url}`;
+    await createLink.mutateAsync({ ...values, url });
     reset();
     onClose();
   }

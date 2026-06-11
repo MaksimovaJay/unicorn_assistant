@@ -12,7 +12,12 @@ const nunito = Nunito({
 
 export const metadata: Metadata = {
   title: "Unicorn Assistant",
-  description: "Your private workspace",
+  description: "Рабочее пространство",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "Unicorn",
+  },
 };
 
 export default function RootLayout({
