@@ -27,7 +27,7 @@ export default async function WorkspaceLayout({
   if (!profile) {
     const { data: ws } = await supabase
       .from("workspaces")
-      .insert({ name: "Unicorn Assistant" })
+      .insert({ name: "Unicorn Assistant", timezone: "Europe/Moscow", currency: "RUB" })
       .select("id")
       .single();
     if (ws) {
