@@ -42,45 +42,47 @@ export function SlotTile({ slot, sessionId }: Props) {
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
-        <button
-          className={cn(
-            "relative w-full h-full min-h-[100px] rounded-2xl border-2 p-4 text-left transition-all hover:shadow-md",
-            isFree
-              ? "bg-primary/5 border-primary/20 hover:border-primary/40"
-              : "bg-muted/50 border-border hover:border-muted-foreground/30"
-          )}
-        >
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-lg font-black text-text-primary">
-              {slot.slot_time ? slot.slot_time.slice(0, 5) : "—:——"}
+      <PopoverTrigger
+        render={
+          <button
+            className={cn(
+              "relative w-full h-full min-h-[100px] rounded-2xl border-2 p-4 text-left transition-all hover:shadow-md",
+              isFree
+                ? "bg-primary/5 border-primary/20 hover:border-primary/40"
+                : "bg-muted/50 border-border hover:border-muted-foreground/30"
+            )}
+          />
+        }
+      >
+        <div className="flex items-center justify-between mb-2">
+          <span className="text-lg font-black text-text-primary">
+            {slot.slot_time ? slot.slot_time.slice(0, 5) : "—:——"}
+          </span>
+          <span className={cn(
+            "text-[10px] font-bold px-2 py-0.5 rounded-full",
+            isFree ? "bg-primary/20 text-primary" : "bg-muted text-muted-foreground"
+          )}>
+            {isFree ? "СВОБОДНО" : "ЗАНЯТО"}
+          </span>
+        </div>
+        {!isFree && (
+          <div className="flex items-center justify-between">
+            <span className="text-xs text-text-secondary truncate max-w-[80%]">
+              {slot.client_name ?? slot.client_telegram ?? ""}
             </span>
-            <span className={cn(
-              "text-[10px] font-bold px-2 py-0.5 rounded-full",
-              isFree ? "bg-primary/20 text-primary" : "bg-muted text-muted-foreground"
-            )}>
-              {isFree ? "СВОБОДНО" : "ЗАНЯТО"}
-            </span>
+            {tgHandle && (
+              <a
+                href={`https://t.me/${tgHandle}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={(e) => e.stopPropagation()}
+                className="text-primary hover:text-primary/80"
+              >
+                <Send size={12} />
+              </a>
+            )}
           </div>
-          {!isFree && (
-            <div className="flex items-center justify-between">
-              <span className="text-xs text-text-secondary truncate max-w-[80%]">
-                {slot.client_name ?? slot.client_telegram ?? ""}
-              </span>
-              {tgHandle && (
-                <a
-                  href={`https://t.me/${tgHandle}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={(e) => e.stopPropagation()}
-                  className="text-primary hover:text-primary/80"
-                >
-                  <Send size={12} />
-                </a>
-              )}
-            </div>
-          )}
-        </button>
+        )}
       </PopoverTrigger>
       <PopoverContent className="w-72 p-4" align="center">
         <div className="space-y-3">

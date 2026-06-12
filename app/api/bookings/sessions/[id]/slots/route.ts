@@ -26,7 +26,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
   const body = await request.json();
   const { data, error } = await supabase
     .from("booking_slots")
-    .insert({ session_id: id, slot_time: body.slot_time, status: "free" })
+    .insert({ session_id: id, slot_time: body.slot_time, status: "free", client_name: null, client_phone: null, client_telegram: null, notes: null })
     .select().single();
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
