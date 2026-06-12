@@ -1,5 +1,9 @@
-import { BookOpen } from "lucide-react";
-import { ComingSoon } from "@/components/layout/coming-soon";
+import { SessionsList } from "@/components/bookings/sessions-list";
+
 export default function BookingsPage() {
-  return <ComingSoon icon={BookOpen} title="Записи" description="Управление слотами консультаций" />;
+  return (
+    <div className="flex flex-col gap-6">
+      <SessionsList />
+    </div>
+  );
 }

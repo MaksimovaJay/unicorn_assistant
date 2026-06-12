@@ -106,6 +106,32 @@ export interface BookingSlot {
   updated_at: string;
 }
 
+export interface BookingGroup {
+  id: string;
+  session_id: string;
+  name: string;
+  position: number;
+  created_at: string;
+}
+
+export type PaymentStatusParticipant = "paid" | "unpaid";
+export type ContactChannel = "telegram" | "whatsapp" | "other";
+
+export interface BookingParticipant {
+  id: string;
+  group_id: string;
+  full_name: string;
+  email: string | null;
+  phone: string | null;
+  payment_status: PaymentStatusParticipant;
+  booked: boolean;
+  payment_date: string | null;
+  contact_channel: ContactChannel | null;
+  receipt_url: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface Payment {
   id: string;
   workspace_id: string;
@@ -274,6 +300,18 @@ export interface Database {
         Row: { id: string; workspace_id: string; title: string; url: string; created_by: string | null; created_at: string };
         Insert: { workspace_id: string; title: string; url: string; created_by?: string | null };
         Update: { title?: string; url?: string };
+        Relationships: [];
+      };
+      booking_groups: {
+        Row: BookingGroup & { [key: string]: unknown };
+        Insert: Omit<BookingGroup, "id" | "created_at"> & { [key: string]: unknown };
+        Update: Partial<Omit<BookingGroup, "id" | "created_at">> & { [key: string]: unknown };
+        Relationships: [];
+      };
+      booking_participants: {
+        Row: BookingParticipant & { [key: string]: unknown };
+        Insert: Omit<BookingParticipant, "id" | "created_at" | "updated_at"> & { [key: string]: unknown };
+        Update: Partial<Omit<BookingParticipant, "id" | "created_at">> & { [key: string]: unknown };
         Relationships: [];
       };
     };
