@@ -27,6 +27,18 @@ export function useCreateSession() {
   });
 }
 
+export function useUpdateSession() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ id, ...body }: { id: string; title?: string; session_date?: string }) => {
+      const res = await fetch(`/api/bookings/sessions/${id}`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+      if (!res.ok) throw new Error(await res.text());
+      return res.json() as Promise<BookingSession>;
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["booking-sessions"] }),
+  });
+}
+
 export function useDeleteSession() {
   const qc = useQueryClient();
   return useMutation({
@@ -102,6 +114,18 @@ export function useCreateGroup(sessionId: string) {
   return useMutation({
     mutationFn: async (body: { name: string; position?: number }) => {
       const res = await fetch(`/api/bookings/sessions/${sessionId}/groups`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+      if (!res.ok) throw new Error(await res.text());
+      return res.json() as Promise<BookingGroup>;
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["booking-groups", sessionId] }),
+  });
+}
+
+export function useUpdateGroup(sessionId: string) {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ id, ...body }: { id: string; name?: string }) => {
+      const res = await fetch(`/api/bookings/groups/${id}`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
       if (!res.ok) throw new Error(await res.text());
       return res.json() as Promise<BookingGroup>;
     },

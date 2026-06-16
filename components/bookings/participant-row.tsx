@@ -115,7 +115,7 @@ export function ParticipantRow({ participant: p, groupId }: Props) {
       </td>
       <td className="px-3 py-2">
         <button
-          onClick={() => del.mutate(p.id)}
+          onClick={() => { if (confirm(`Удалить участника "${p.full_name}"?`)) del.mutate(p.id); }}
           className="p-1 rounded hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-colors"
         >
           <Trash2 size={14} />

@@ -4,7 +4,8 @@ import { useState } from "react";
 import { Plus, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useParticipants, useCreateParticipant, useDeleteGroup } from "@/hooks/use-bookings";
+import { InlineEdit } from "@/components/ui/inline-edit";
+import { useParticipants, useCreateParticipant, useDeleteGroup, useUpdateGroup } from "@/hooks/use-bookings";
 import { ParticipantRow } from "./participant-row";
 import type { BookingGroup } from "@/types/database";
 
@@ -16,6 +17,7 @@ interface Props {
 export function GroupTable({ group, sessionId }: Props) {
   const { data: participants = [], isLoading } = useParticipants(group.id);
   const create = useCreateParticipant(group.id);
+  const update = useUpdateGroup(sessionId);
   const del = useDeleteGroup(sessionId);
   const [addName, setAddName] = useState("");
   const [showAdd, setShowAdd] = useState(false);
@@ -30,9 +32,17 @@ export function GroupTable({ group, sessionId }: Props) {
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between">
-        <h3 className="font-semibold text-text-primary">{group.name}</h3>
+        <h3 className="font-semibold text-text-primary">
+          <InlineEdit
+            value={group.name}
+            onSave={(name) => update.mutate({ id: group.id, name })}
+            className="text-base"
+            inputClassName="text-base font-semibold"
+            placeholder="Название группы"
+          />
+        </h3>
         <button
-          onClick={() => del.mutate(group.id)}
+          onClick={() => { if (confirm("Вы уверены, что хотите удалить эту группу со всеми участниками?")) del.mutate(group.id); }}
           className="p-1 rounded hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-colors"
         >
           <Trash2 size={14} />

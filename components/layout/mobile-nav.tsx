@@ -14,11 +14,11 @@ const mainItems = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/calendar", label: "Календарь", icon: Calendar },
   { href: "/tasks", label: "Задачи", icon: CheckSquare },
-  { href: "/contacts", label: "Контакты", icon: Users },
+  { href: "/bookings", label: "Записи", icon: BookOpen },
 ];
 
 const moreItems = [
-  { href: "/bookings", label: "Записи", icon: BookOpen },
+  { href: "/contacts", label: "Контакты", icon: Users },
   { href: "/payments", label: "Платежи", icon: CreditCard },
   { href: "/notes", label: "Заметки", icon: FileText },
   { href: "/files", label: "Файлы", icon: FolderOpen },

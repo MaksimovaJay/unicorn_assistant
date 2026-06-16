@@ -4,7 +4,8 @@ import { useState } from "react";
 import Link from "next/link";
 import { Plus, Trash2, CalendarDays } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useSessions, useDeleteSession } from "@/hooks/use-bookings";
+import { InlineEdit } from "@/components/ui/inline-edit";
+import { useSessions, useDeleteSession, useUpdateSession } from "@/hooks/use-bookings";
 import { SessionDialog } from "./session-dialog";
 import type { BookingSession } from "@/types/database";
 
@@ -15,22 +16,27 @@ function formatDate(dateStr: string) {
 
 function SessionCard({ session }: { session: BookingSession }) {
   const del = useDeleteSession();
+  const update = useUpdateSession();
 
   return (
     <div className="group relative bg-surface border border-border rounded-2xl p-5 hover:border-primary/40 hover:shadow-sm transition-all">
-      <Link href={`/bookings/${session.id}`} className="block">
-        <div className="flex items-start gap-3">
-          <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
-            <CalendarDays size={18} className="text-primary" />
-          </div>
-          <div>
-            <p className="font-semibold text-text-primary">{session.title}</p>
-            <p className="text-sm text-text-secondary mt-0.5">{formatDate(session.session_date)}</p>
-          </div>
+      <div className="flex items-start gap-3">
+        <Link href={`/bookings/${session.id}`} className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0 hover:bg-primary/20 transition-colors">
+          <CalendarDays size={18} className="text-primary" />
+        </Link>
+        <div className="flex-1 min-w-0">
+          <p className="font-semibold text-text-primary">
+            <InlineEdit
+              value={session.title}
+              onSave={(title) => update.mutate({ id: session.id, title })}
+              placeholder="Название"
+            />
+          </p>
+          <p className="text-sm text-text-secondary mt-0.5">{formatDate(session.session_date)}</p>
         </div>
-      </Link>
+      </div>
       <button
-        onClick={(e) => { e.preventDefault(); del.mutate(session.id); }}
+        onClick={(e) => { e.preventDefault(); if (confirm("Вы уверены, что хотите удалить это мероприятие?")) del.mutate(session.id); }}
         className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity p-1.5 rounded-lg hover:bg-destructive/10 text-muted-foreground hover:text-destructive"
       >
         <Trash2 size={14} />
