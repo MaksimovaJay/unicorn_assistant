@@ -128,6 +128,7 @@ export interface BookingParticipant {
   payment_date: string | null;
   contact_channel: ContactChannel | null;
   receipt_url: string | null;
+  telegram: string | null;
   created_at: string;
   updated_at: string;
 }

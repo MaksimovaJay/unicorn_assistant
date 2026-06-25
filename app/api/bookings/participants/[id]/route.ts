@@ -8,7 +8,7 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const body = await request.json();
-  const allowed = ["full_name", "email", "phone", "payment_status", "booked", "payment_date", "contact_channel", "receipt_url"];
+  const allowed = ["full_name", "email", "phone", "payment_status", "booked", "payment_date", "contact_channel", "receipt_url", "telegram"];
   const updates: Record<string, unknown> = { updated_at: new Date().toISOString() };
   for (const key of allowed) {
     if (key in body) updates[key] = body[key];
