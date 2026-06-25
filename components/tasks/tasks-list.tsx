@@ -26,7 +26,7 @@ interface Props {
 }
 
 export function TasksList({ selectedTaskId, onSelectTask }: Props) {
-  const { data: allTasks = [], isLoading } = useTasks();
+  const { data: allTasks = [], isLoading, error: queryError } = useTasks();
   const create = useCreateTask();
   const update = useUpdateTask();
   const [tab, setTab] = useState<TaskTab>("all");
@@ -91,6 +91,11 @@ export function TasksList({ selectedTaskId, onSelectTask }: Props) {
 
       {/* Task list */}
       <div className="flex-1 overflow-y-auto px-5 py-4 space-y-2">
+        {queryError && (
+          <div className="text-xs text-red-500 bg-red-50 border border-red-200 rounded-lg p-2 mb-2">
+            Ошибка загрузки: {queryError.message}
+          </div>
+        )}
         {isLoading ? (
           Array.from({ length: 4 }).map((_, i) => (
             <div key={i} className="h-14 bg-muted animate-pulse rounded-xl" />
@@ -134,7 +139,9 @@ export function TasksList({ selectedTaskId, onSelectTask }: Props) {
             <TaskQuickAdd
               isLoading={create.isPending}
               onAdd={({ title, deadline, priority }) =>
-                create.mutate({ title, deadline, priority })
+                create.mutate({ title, deadline, priority }, {
+                  onError: (e) => alert("Ошибка создания задачи: " + e.message),
+                })
               }
             />
           </div>
