@@ -1,18 +1,21 @@
 "use client";
 
-import { useState, useRef } from "react";
-import { Trash2, Upload, ExternalLink } from "lucide-react";
+import { useRef } from "react";
+import { Info, Trash2, Upload, ExternalLink } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { cn } from "@/lib/utils";
 import { useUpdateParticipant, useDeleteParticipant, useUploadReceipt } from "@/hooks/use-bookings";
 import type { BookingParticipant, ContactChannel } from "@/types/database";
 
 interface Props {
   participant: BookingParticipant;
   groupId: string;
+  isActive: boolean;
+  onSelect: () => void;
 }
 
-export function ParticipantRow({ participant: p, groupId }: Props) {
+export function ParticipantRow({ participant: p, groupId, isActive, onSelect }: Props) {
   const update = useUpdateParticipant(groupId);
   const del = useDeleteParticipant(groupId);
   const uploadReceipt = useUploadReceipt(groupId);
@@ -29,6 +32,20 @@ export function ParticipantRow({ participant: p, groupId }: Props) {
 
   return (
     <tr className="border-b border-border last:border-0 hover:bg-muted/30 transition-colors">
+      <td className="px-2 py-2 w-8">
+        <button
+          type="button"
+          onClick={onSelect}
+          className={cn(
+            "p-1 rounded transition-colors",
+            isActive
+              ? "text-primary bg-primary/10"
+              : "text-muted-foreground hover:text-primary hover:bg-primary/10"
+          )}
+        >
+          <Info size={14} />
+        </button>
+      </td>
       <td className="px-3 py-2 min-w-[130px]">
         <Input
           defaultValue={p.full_name}
@@ -54,7 +71,10 @@ export function ParticipantRow({ participant: p, groupId }: Props) {
         />
       </td>
       <td className="px-3 py-2 min-w-[130px]">
-        <Select defaultValue={p.payment_status} onValueChange={(v) => blur("payment_status", v)}>
+        <Select
+          defaultValue={p.payment_status}
+          onValueChange={(v) => blur("payment_status", v)}
+        >
           <SelectTrigger className="h-8 text-sm">
             <SelectValue />
           </SelectTrigger>
@@ -65,7 +85,10 @@ export function ParticipantRow({ participant: p, groupId }: Props) {
         </Select>
       </td>
       <td className="px-3 py-2 min-w-[100px]">
-        <Select defaultValue={p.booked ? "yes" : "no"} onValueChange={(v) => blur("booked", v === "yes")}>
+        <Select
+          defaultValue={p.booked ? "yes" : "no"}
+          onValueChange={(v) => blur("booked", v === "yes")}
+        >
           <SelectTrigger className="h-8 text-sm">
             <SelectValue />
           </SelectTrigger>
@@ -84,7 +107,10 @@ export function ParticipantRow({ participant: p, groupId }: Props) {
         />
       </td>
       <td className="px-3 py-2 min-w-[130px]">
-        <Select defaultValue={p.contact_channel ?? ""} onValueChange={(v) => blur("contact_channel", v as ContactChannel || null)}>
+        <Select
+          defaultValue={p.contact_channel ?? ""}
+          onValueChange={(v) => blur("contact_channel", (v as ContactChannel) || null)}
+        >
           <SelectTrigger className="h-8 text-sm">
             <SelectValue placeholder="—" />
           </SelectTrigger>
@@ -97,25 +123,40 @@ export function ParticipantRow({ participant: p, groupId }: Props) {
       </td>
       <td className="px-3 py-2 min-w-[80px] text-center">
         {p.receipt_url ? (
-          <a href={p.receipt_url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-primary text-xs hover:underline">
+          <a
+            href={p.receipt_url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1 text-primary text-xs hover:underline"
+          >
             <ExternalLink size={12} /> Чек
           </a>
         ) : (
           <>
             <button
+              type="button"
               onClick={() => fileRef.current?.click()}
               disabled={uploadReceipt.isPending}
               className="inline-flex items-center gap-1 text-muted-foreground text-xs hover:text-primary transition-colors"
             >
               <Upload size={12} /> {uploadReceipt.isPending ? "..." : "Загрузить"}
             </button>
-            <input ref={fileRef} type="file" accept="image/*,.pdf" className="hidden" onChange={handleFile} />
+            <input
+              ref={fileRef}
+              type="file"
+              accept="image/*,.pdf"
+              className="hidden"
+              onChange={handleFile}
+            />
           </>
         )}
       </td>
       <td className="px-3 py-2">
         <button
-          onClick={() => { if (confirm(`Удалить участника "${p.full_name}"?`)) del.mutate(p.id); }}
+          type="button"
+          onClick={() => {
+            if (confirm(`Удалить участника "${p.full_name}"?`)) del.mutate(p.id);
+          }}
           className="p-1 rounded hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-colors"
         >
           <Trash2 size={14} />
