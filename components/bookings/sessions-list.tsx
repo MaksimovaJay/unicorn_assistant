@@ -24,7 +24,7 @@ function SessionCard({ session }: { session: BookingSession }) {
       className="group relative bg-surface border border-border rounded-2xl p-5 hover:border-primary/40 hover:shadow-sm transition-all block"
     >
       <div className="flex items-start gap-3">
-        <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
+        <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0 hover:bg-primary/20 transition-colors">
           <CalendarDays size={18} className="text-primary" />
         </div>
         <div className="flex-1 min-w-0">
