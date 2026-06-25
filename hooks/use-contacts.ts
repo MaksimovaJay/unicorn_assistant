@@ -1,6 +1,7 @@
 "use client";
 
 import { useMutation } from "@tanstack/react-query";
+import type { Contact } from "@/types/database";
 
 interface CreateContactInput {
   full_name: string;
@@ -9,7 +10,7 @@ interface CreateContactInput {
   email?: string;
 }
 
-async function createContactFn(input: CreateContactInput): Promise<unknown> {
+async function createContactFn(input: CreateContactInput): Promise<Contact> {
   const res = await fetch("/api/contacts", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
