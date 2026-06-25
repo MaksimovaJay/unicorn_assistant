@@ -102,6 +102,7 @@ export interface BookingSlot {
   client_phone: string | null;
   client_telegram: string | null;
   notes: string | null;
+  calendar_event_id: string | null;
   created_at: string;
   updated_at: string;
 }

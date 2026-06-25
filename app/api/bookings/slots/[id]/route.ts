@@ -14,8 +14,99 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
     if (key in body) updates[key] = body[key];
   }
 
-  const { data, error } = await supabase.from("booking_slots").update(updates).eq("id", id).select().single();
+  const { data, error } = await supabase
+    .from("booking_slots")
+    .update(updates)
+    .eq("id", id)
+    .select()
+    .single();
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+
+  // Calendar sync + auto-contact when slot becomes occupied
+  if (data.status === "occupied" && data.client_name && !data.calendar_event_id) {
+    try {
+      const { data: session } = await supabase
+        .from("booking_sessions")
+        .select("session_date, workspace_id")
+        .eq("id", data.session_id)
+        .single();
+
+      if (session) {
+        // slot_time from Supabase is "HH:MM:SS"; may be "HH:MM" — normalise
+        const timeStr = data.slot_time.length === 5
+          ? `${data.slot_time}:00`
+          : data.slot_time;
+        const startAt = new Date(`${session.session_date}T${timeStr}`);
+        const endAt = new Date(startAt.getTime() + 60 * 60 * 1000);
+
+        const { data: event } = await supabase
+          .from("events")
+          .insert({
+            workspace_id: session.workspace_id,
+            title: `Консультация — ${data.client_name}`,
+            event_type: "consultation",
+            status: "confirmed",
+            start_at: startAt.toISOString(),
+            end_at: endAt.toISOString(),
+            all_day: false,
+            created_by: user.id,
+            description: null,
+            location: null,
+            meeting_link: null,
+            notes: null,
+            contact_id: null,
+            telegram: data.client_telegram ?? null,
+          })
+          .select("id")
+          .single();
+
+        if (event) {
+          await supabase
+            .from("booking_slots")
+            .update({ calendar_event_id: event.id })
+            .eq("id", data.id);
+        }
+
+        // Auto-contact when client has a telegram
+        if (data.client_telegram) {
+          const { data: existing } = await supabase
+            .from("contacts")
+            .select("id")
+            .eq("workspace_id", session.workspace_id)
+            .eq("telegram", data.client_telegram)
+            .maybeSingle();
+
+          if (!existing) {
+            await supabase.from("contacts").insert({
+              workspace_id: session.workspace_id,
+              full_name: data.client_name,
+              telegram: data.client_telegram,
+              phone: data.client_phone ?? null,
+              email: null,
+              notes: null,
+              favorite: false,
+            });
+          }
+        }
+      }
+    } catch (e) {
+      console.error("[slot sync] calendar/contact error:", e);
+    }
+  }
+
+  // Calendar sync when slot becomes free — delete the linked event
+  if (data.status === "free" && data.calendar_event_id) {
+    try {
+      await supabase.from("events").delete().eq("id", data.calendar_event_id);
+      await supabase
+        .from("booking_slots")
+        .update({ calendar_event_id: null })
+        .eq("id", data.id);
+    } catch (e) {
+      console.error("[slot sync] delete event error:", e);
+    }
+  }
+
   return NextResponse.json(data);
 }
 
