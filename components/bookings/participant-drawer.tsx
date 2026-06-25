@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import { useUpdateParticipant, useDeleteParticipant, useUploadReceipt } from "@/hooks/use-bookings";
+import { useCreateContact } from "@/hooks/use-contacts";
 import type { BookingParticipant } from "@/types/database";
 
 function telegramHref(value: string): string {
@@ -34,6 +35,7 @@ export function ParticipantDrawer({ participant: p, groupId, onClose, onUpdate }
   const update = useUpdateParticipant(groupId);
   const del = useDeleteParticipant(groupId);
   const uploadReceipt = useUploadReceipt(groupId);
+  const createContact = useCreateContact();
   const fileRef = useRef<HTMLInputElement>(null);
 
   const [telegram, setTelegram] = useState(p.telegram ?? "");
@@ -45,6 +47,15 @@ export function ParticipantDrawer({ participant: p, groupId, onClose, onUpdate }
   async function handleSave() {
     const result = await update.mutateAsync({ id: p.id, telegram: telegram.trim() || null });
     onUpdate(result);
+    // Fire-and-forget: auto-add to contacts when telegram is saved
+    if (telegram.trim()) {
+      createContact.mutate({
+        full_name: p.full_name,
+        telegram: telegram.trim(),
+        ...(p.phone ? { phone: p.phone } : {}),
+        ...(p.email ? { email: p.email } : {}),
+      });
+    }
   }
 
   async function handleDelete() {
