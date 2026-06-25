@@ -37,6 +37,7 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
           ? `${data.slot_time}:00`
           : data.slot_time;
         const startAt = new Date(`${session.session_date}T${timeStr}`);
+        if (isNaN(startAt.getTime())) throw new Error(`Invalid slot_time: ${data.slot_time}`);
         const endAt = new Date(startAt.getTime() + 60 * 60 * 1000);
 
         const { data: event } = await supabase
