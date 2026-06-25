@@ -19,11 +19,14 @@ function SessionCard({ session }: { session: BookingSession }) {
   const update = useUpdateSession();
 
   return (
-    <div className="group relative bg-surface border border-border rounded-2xl p-5 hover:border-primary/40 hover:shadow-sm transition-all">
+    <Link
+      href={`/bookings/${session.id}`}
+      className="group relative bg-surface border border-border rounded-2xl p-5 hover:border-primary/40 hover:shadow-sm transition-all block"
+    >
       <div className="flex items-start gap-3">
-        <Link href={`/bookings/${session.id}`} className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0 hover:bg-primary/20 transition-colors">
+        <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
           <CalendarDays size={18} className="text-primary" />
-        </Link>
+        </div>
         <div className="flex-1 min-w-0">
           <p className="font-semibold text-text-primary">
             <InlineEdit
@@ -36,12 +39,17 @@ function SessionCard({ session }: { session: BookingSession }) {
         </div>
       </div>
       <button
-        onClick={(e) => { e.preventDefault(); if (confirm("Вы уверены, что хотите удалить это мероприятие?")) del.mutate(session.id); }}
+        type="button"
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          if (confirm("Вы уверены, что хотите удалить это мероприятие?")) del.mutate(session.id);
+        }}
         className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity p-1.5 rounded-lg hover:bg-destructive/10 text-muted-foreground hover:text-destructive"
       >
         <Trash2 size={14} />
       </button>
-    </div>
+    </Link>
   );
 }
 
