@@ -24,7 +24,7 @@ export function GroupTable({ group, sessionId }: Props) {
 
   async function handleAdd() {
     if (!addName.trim()) return;
-    await create.mutateAsync({ full_name: addName.trim(), email: null, phone: null, payment_status: "unpaid", booked: false, payment_date: null, contact_channel: null });
+    await create.mutateAsync({ full_name: addName.trim(), email: null, phone: null, payment_status: "unpaid", booked: false, payment_date: null, contact_channel: null, telegram: null });
     setAddName("");
     setShowAdd(false);
   }

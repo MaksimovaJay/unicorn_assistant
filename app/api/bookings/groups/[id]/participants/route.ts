@@ -36,6 +36,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
       payment_date: body.payment_date ?? null,
       contact_channel: body.contact_channel ?? null,
       receipt_url: null,
+      telegram: body.telegram ?? null,
     })
     .select().single();
 
