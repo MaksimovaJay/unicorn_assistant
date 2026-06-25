@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import { Pencil } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface Props {
@@ -53,12 +54,18 @@ export function InlineEdit({ value, onSave, className, inputClassName, placehold
   }
 
   return (
-    <span
-      onClick={() => { setDraft(value); setEditing(true); }}
-      title="Нажмите чтобы изменить"
-      className={cn("cursor-text hover:opacity-70 transition-opacity", className)}
-    >
-      {value || <span className="text-muted-foreground italic">{placeholder}</span>}
+    <span className={cn("group inline-flex items-center gap-1", className)}>
+      <span>
+        {value || <span className="text-muted-foreground italic">{placeholder}</span>}
+      </span>
+      <button
+        type="button"
+        onClick={(e) => { e.stopPropagation(); setDraft(value); setEditing(true); }}
+        aria-label="Редактировать"
+        className="opacity-0 group-hover:opacity-60 hover:!opacity-100 transition-opacity p-0.5 rounded text-muted-foreground flex-shrink-0"
+      >
+        <Pencil size={13} />
+      </button>
     </span>
   );
 }
