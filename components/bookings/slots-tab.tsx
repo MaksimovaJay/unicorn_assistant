@@ -15,10 +15,17 @@ export function SlotsTab({ sessionId }: Props) {
   const { data: slots = [], isLoading } = useSlots(sessionId);
   const create = useCreateSlot(sessionId);
   const [addTime, setAddTime] = useState("09:00");
+  const [addEndTime, setAddEndTime] = useState("10:00");
   const [adding, setAdding] = useState(false);
 
+  function addOneHour(t: string): string {
+    const [h, m] = t.split(":").map(Number);
+    const total = h * 60 + m + 60;
+    return `${String(Math.floor(total / 60) % 24).padStart(2, "0")}:${String(total % 60).padStart(2, "0")}`;
+  }
+
   async function handleAdd() {
-    await create.mutateAsync({ slot_time: addTime });
+    await create.mutateAsync({ slot_time: addTime, end_time: addEndTime });
     setAdding(false);
   }
 
@@ -41,7 +48,8 @@ export function SlotsTab({ sessionId }: Props) {
         {slots.length < 4 && (
           adding ? (
             <div className="min-h-[100px] rounded-2xl border-2 border-dashed border-border p-4 flex flex-col gap-3 justify-center">
-              <Input type="time" value={addTime} onChange={(e) => setAddTime(e.target.value)} className="text-center" />
+              <Input type="time" value={addTime} onChange={(e) => { setAddTime(e.target.value); setAddEndTime(addOneHour(e.target.value)); }} className="text-center" />
+              <Input type="time" value={addEndTime} onChange={(e) => setAddEndTime(e.target.value)} className="text-center" />
               <div className="flex gap-2">
                 <Button size="sm" variant="outline" className="flex-1" onClick={() => setAdding(false)}>Отмена</Button>
                 <Button size="sm" className="flex-1" onClick={handleAdd} disabled={create.isPending}>Добавить</Button>

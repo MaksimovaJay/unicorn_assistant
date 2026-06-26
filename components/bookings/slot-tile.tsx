@@ -16,9 +16,16 @@ interface Props {
   sessionId: string;
 }
 
+function addOneHour(t: string): string {
+  const [h, m] = t.slice(0, 5).split(":").map(Number);
+  const total = h * 60 + m + 60;
+  return `${String(Math.floor(total / 60) % 24).padStart(2, "0")}:${String(total % 60).padStart(2, "0")}`;
+}
+
 export function SlotTile({ slot, sessionId }: Props) {
   const [open, setOpen] = useState(false);
-  const [time, setTime] = useState(slot.slot_time ?? "");
+  const [time, setTime] = useState(slot.slot_time ? slot.slot_time.slice(0, 5) : "");
+  const [endTime, setEndTime] = useState(slot.end_time ? slot.end_time.slice(0, 5) : addOneHour(slot.slot_time ?? "09:00"));
   const [status, setStatus] = useState<"free" | "occupied">(slot.status);
   const [telegram, setTelegram] = useState(slot.client_telegram ?? "");
   const [clientName, setClientName] = useState(slot.client_name ?? "");
@@ -33,6 +40,7 @@ export function SlotTile({ slot, sessionId }: Props) {
     await update.mutateAsync({
       id: slot.id,
       slot_time: time,
+      end_time: endTime || null,
       status,
       client_telegram: telegram || null,
       client_name: clientName || null,
@@ -57,6 +65,11 @@ export function SlotTile({ slot, sessionId }: Props) {
         <div className="flex items-center justify-between mb-2">
           <span className="text-lg font-black text-text-primary">
             {slot.slot_time ? slot.slot_time.slice(0, 5) : "—:——"}
+            {slot.end_time && (
+              <span className="text-sm font-medium text-muted-foreground ml-1">
+                — {slot.end_time.slice(0, 5)}
+              </span>
+            )}
           </span>
           <span className={cn(
             "text-[10px] font-bold px-2 py-0.5 rounded-full",
@@ -88,8 +101,12 @@ export function SlotTile({ slot, sessionId }: Props) {
         <div className="space-y-3">
           <p className="text-sm font-semibold">Редактировать слот</p>
           <div className="space-y-1">
-            <Label className="text-xs">Время</Label>
-            <Input type="time" value={time} onChange={(e) => setTime(e.target.value)} />
+            <Label className="text-xs">Начало</Label>
+            <Input type="time" value={time} onChange={(e) => { setTime(e.target.value); setEndTime(addOneHour(e.target.value)); }} />
+          </div>
+          <div className="space-y-1">
+            <Label className="text-xs">Конец</Label>
+            <Input type="time" value={endTime} onChange={(e) => setEndTime(e.target.value)} />
           </div>
           <div className="space-y-1">
             <Label className="text-xs">Статус</Label>

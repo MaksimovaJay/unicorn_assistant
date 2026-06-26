@@ -97,6 +97,7 @@ export interface BookingSlot {
   id: string;
   session_id: string;
   slot_time: string;
+  end_time: string | null;
   status: BookingSlotStatus;
   client_name: string | null;
   client_phone: string | null;

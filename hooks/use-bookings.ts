@@ -65,7 +65,7 @@ export function useSlots(sessionId: string) {
 export function useCreateSlot(sessionId: string) {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: async (body: { slot_time: string }) => {
+    mutationFn: async (body: { slot_time: string; end_time?: string }) => {
       const res = await fetch(`/api/bookings/sessions/${sessionId}/slots`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
       if (!res.ok) throw new Error(await res.text());
       return res.json() as Promise<BookingSlot>;

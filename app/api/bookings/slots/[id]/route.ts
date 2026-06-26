@@ -8,7 +8,7 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const body = await request.json();
-  const allowed = ["slot_time", "status", "client_name", "client_phone", "client_telegram", "notes"];
+  const allowed = ["slot_time", "end_time", "status", "client_name", "client_phone", "client_telegram", "notes"];
   const updates: Record<string, unknown> = { updated_at: new Date().toISOString() };
   for (const key of allowed) {
     if (key in body) updates[key] = body[key];
@@ -38,7 +38,12 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
           : data.slot_time;
         const startAt = new Date(`${session.session_date}T${timeStr}+03:00`);
         if (isNaN(startAt.getTime())) throw new Error(`Invalid slot_time: ${data.slot_time}`);
-        const endAt = new Date(startAt.getTime() + 60 * 60 * 1000);
+        const endTimeStr = data.end_time
+          ? (data.end_time.length === 5 ? `${data.end_time}:00` : data.end_time)
+          : null;
+        const endAt = endTimeStr
+          ? new Date(`${session.session_date}T${endTimeStr}+03:00`)
+          : new Date(startAt.getTime() + 60 * 60 * 1000);
 
         const { data: event } = await supabase
           .from("events")
