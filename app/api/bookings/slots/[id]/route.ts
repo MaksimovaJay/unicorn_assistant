@@ -36,7 +36,7 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
         const timeStr = data.slot_time.length === 5
           ? `${data.slot_time}:00`
           : data.slot_time;
-        const startAt = new Date(`${session.session_date}T${timeStr}`);
+        const startAt = new Date(`${session.session_date}T${timeStr}+03:00`);
         if (isNaN(startAt.getTime())) throw new Error(`Invalid slot_time: ${data.slot_time}`);
         const endAt = new Date(startAt.getTime() + 60 * 60 * 1000);
 
