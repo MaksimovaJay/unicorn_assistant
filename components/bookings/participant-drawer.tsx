@@ -67,8 +67,12 @@ export function ParticipantDrawer({ participant: p, groupId, onClose, onUpdate }
   async function handleFile(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file) return;
-    const result = await uploadReceipt.mutateAsync({ id: p.id, file });
-    onUpdate({ ...p, receipt_url: result.url });
+    try {
+      const result = await uploadReceipt.mutateAsync({ id: p.id, file });
+      onUpdate({ ...p, receipt_url: result.url });
+    } catch (err) {
+      alert(`Ошибка загрузки: ${err instanceof Error ? err.message : "неизвестная ошибка"}`);
+    }
   }
 
   const tgHref = telegramHref(telegram);
