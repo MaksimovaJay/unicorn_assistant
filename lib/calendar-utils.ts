@@ -3,20 +3,20 @@ import type { EventInput } from "@fullcalendar/core";
 
 export const EVENT_COLORS: Record<EventType, { bg: string; text: string }> = {
   meeting:      { bg: "#F996A5", text: "#ffffff" },
-  consultation: { bg: "#FABE3E", text: "#2D2020" },
-  training:     { bg: "#22C55E", text: "#ffffff" },
-  call:         { bg: "#60A5FA", text: "#ffffff" },
-  personal:     { bg: "#A78BFA", text: "#ffffff" },
-  other:        { bg: "#9CA3AF", text: "#ffffff" },
+  consultation: { bg: "#FB923C", text: "#ffffff" },
+  training:     { bg: "#2DD4BF", text: "#ffffff" },
+  call:         { bg: "#93C5FD", text: "#1e3a5f" },
+  personal:     { bg: "#C084FC", text: "#ffffff" },
+  other:        { bg: "#3B82F6", text: "#ffffff" },
 };
 
 export const EVENT_TYPE_LABELS: Record<EventType, string> = {
-  meeting:      "Встреча",
+  meeting:      "Оффлайн встреча",
   consultation: "Консультация",
-  training:     "Тренировка",
-  call:         "Звонок",
+  training:     "Супервизия",
+  call:         "Менторство",
   personal:     "Личное",
-  other:        "Другое",
+  other:        "Выходной",
 };
 
 export const EVENT_STATUS_LABELS: Record<EventStatus, string> = {
